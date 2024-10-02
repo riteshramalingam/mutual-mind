@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mutual Minds Fintech</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f8f9fa;
+            color: #333;
+            overflow-x: hidden;
+            line-height: 1.6;
+            transition: margin-left 0.5s ease;
+        }
+
+        /* Header section */
+        header {
+            background-color: #0077b6;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Hamburger Menu */
+        .hamburger {
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .hamburger div {
+            width: 25px;
+            height: 3px;
+            background-color: white;
+            margin: 5px;
+            transition: 0.4s;
+        }
+
+        /* Sidebar (Menu) */
+        .nav-links {
+            position: fixed;
+            top: 0;
+            left: -250px;
+            height: 100%;
+            width: 250px;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            align-items: start;
+            padding: 20px;
+            transition: left 0.5s ease;
+            z-index: 1000;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+        }
+
+        .nav-links a {
+            color: #0077b6;
+            text-decoration: none;
+            font-size: 18px;
+            padding: 15px 0;
+            width: 100%;
+            transition: color 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            color: #00b4d8;
+        }
+
+        /* When the menu is open, it slides in */
+        .nav-links.open {
+            left: 0;
+        }
+
+        /* Move content to the right when menu is open */
+        body.menu-open {
+            overflow: hidden;
+        }
+
+        /* Search Bar */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+        }
+
+        .search-bar input {
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: none;
+            outline: none;
+            width: 250px;
+            transition: width 0.4s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-bar input:focus {
+            width: 350px;
+        }
+
+        /* Banner */
+        .banner {
+            background: linear-gradient(90deg, #0077b6, #00b4d8);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .banner h1 {
+            font-size: 32px;
+            font-family: 'Georgia', serif;
+            margin-bottom: 20px;
+            animation: fadeInUp 1.5s ease;
+        }
+
+        .banner p {
+            font-size: 18px;
+            font-family: 'Helvetica', sans-serif;
+            margin-top: 10px;
+            animation: fadeInUp 2s ease;
+        }
+
+        /* Main section */
+        .main-content {
+            padding: 30px 15px;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .section-title {
+            font-size: 28px;
+            margin-bottom: 20px;
+            font-family: 'Georgia', serif;
+            color: #0077b6;
+            text-align: center;
+        }
+
+        .about-description {
+            font-size: 18px;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #555;
+            text-align: justify;
+            padding: 0 10px;
+        }
+
+        .fund-card {
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .fund-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        .fund-card h3 {
+            color: #0077b6;
+            font-size: 22px;
+            font-family: 'Georgia', serif;
+            transition: color 0.3s ease;
+        }
+
+        .fund-card p {
+            margin-top: 10px;
+            color: #555;
+            font-family: 'Helvetica', sans-serif;
+            line-height: 1.8;
+        }
+
+        .fund-card:hover h3 {
+            color: #00b4d8;
+        }
+
+        .funds-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        /* Button styles */
+        button {
+            background-color: #0077b6;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            animation: fadeInUp 2s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #48cae4;
+            transform: translateY(-5px);
+        }
+
+        /* Hidden slides for fund details */
+        .slide {
+            display: none;
+        }
+
+        .slide.active {
+            display: block;
+            padding: 30px 15px;
+            animation: fadeIn 1.5s ease;
+        }
+
+        .slide ul {
+            list-style-type: disc;
+            padding-left: 20px;
+        }
+
+        .slide ul li {
+            margin-bottom: 10px;
+            font-family: 'Arial', sans-serif;
+            font-size: 16px;
+            color: #333;
+        }
+
+        /* Footer styles */
+        footer {
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            animation: fadeIn 2s ease;
+        }
+
+        footer a {
+            color: #00b4d8;
+            text-decoration: none;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Adjusted spacing for Contact Us section */
+        #contact .section-title {
+            margin-bottom: 10px;
+        }
+
+        #contact .main-content {
+            padding-top: 10px;
+        }
+
+        /* Responsive Media Query */
+        @media (max-width: 768px) {
+            .hamburger {
+                display: flex;
+            }
+
+            .search-bar {
+                display: none;
+            }
+
+            .banner h1 {
+                font-size: 24px;
+            }
+
+            .banner p {
+                font-size: 16px;
+            }
+
+            body.menu-open {
+                margin-left: 0;
+            }
+
+            .nav-links {
+                width: 50%;
+                left: -50%;
+            }
+
+            .nav-links.open {
+                left: 0;
+            }
+
+            .funds-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Header section with hamburger menu and search bar -->
+    <header>
+        <div class="hamburger" onclick="toggleMenu()">
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    
+        <div class="search-bar">
+            <input type="text" placeholder="Search mutual funds...">
+        </div>
+    </header>
+
+    <!-- Sliding Sidebar Menu -->
+    <div class="nav-links">
+        <a href="#about">About Us</a>
+        <a href="#investor">Investor</a>
+        <a href="#contact">Contact Us</a>
+    </div>
+
+    <!-- Banner section with a welcoming message -->
+    <div class="banner">
+        <h1>Welcome to Mutual Minds Fintech</h1>
+        <p>Invest smartly in mutual funds with expert guidance</p>
+    </div>
+
+    <!-- Main content area -->
+    <div class="main-content slide active" id="fund-list">
+        <!-- Section: About Us -->
+        <section id="about">
+            <h2 class="section-title">About Us</h2>
+            <p class="about-description">We are an AMFI registered mutual fund distributor dedicated to making your investments work harder for you. Our mission is to provide personalized financial solutions that cater to all your investment needs. <strong>"Your Money, Our Expertise."</strong> Start investing today and let us help you grow your wealth with smart choices.</p>
+            <p class="about-description"><em>“Invest in the future you dream of. Let’s build wealth together through mutual funds.”</em></p>
+            <p class="about-description">At Mutual Minds Fintech, we offer tailored financial advice that takes the guesswork out of investing. From equity to debt funds, we have options that cater to every risk profile and goal. Start your journey towards financial freedom today.</p>
+        </section>
+
+        <!-- Section: Popular Mutual Funds -->
+        <section id="investor">
+            <h2 class="section-title">Popular Mutual Funds</h2>
+            <div class="funds-grid">
+                <div class="fund-card">
+                    <h3>Equity Fund</h3>
+                    <p>Long-term growth through stock investments.</p>
+                    <button onclick="showSlide('equity')">Explore</button>
+                </div>
+                <div class="fund-card">
+                    <h3>Debt Fund</h3>
+                    <p>Regular income with lower risks through fixed-income instruments.</p>
+                    <button onclick="showSlide('debt')">Explore</button>
+                </div>
+                <div class="fund-card">
+                    <h3>Hybrid Fund</h3>
+                    <p>A balanced approach with a mix of equity and debt investments.</p>
+                    <button onclick="showSlide('hybrid')">Explore</button>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Slide: Equity Fund Details -->
+    <div class="main-content slide" id="equity">
+        <h2 class="section-title">Equity Fund</h2>
+        <ul>
+            <li>Equity Funds invest primarily in stocks, selected by professionals to maximize returns while controlling risk.</li>
+            <li>They offer a diversified portfolio with 40-50 stocks, reducing the overall risk.</li>
+            <li>These funds are ideal for long-term investors, recommended for an investment horizon of at least 5 years.</li>
+            <li>Equity Funds can experience short-term volatility, but over time they can offer higher potential returns.</li>
+        </ul>
+        <button onclick="showSlide('fund-list')">Go Back</button>
+    </div>
+
+    <!-- Slide: Debt Fund Details -->
+    <div class="main-content slide" id="debt">
+        <h2 class="section-title">Debt Fund</h2>
+        <ul>
+            <li>Debt Funds generate returns by lending to governments and companies.</li>
+            <li>The risk level depends on the lending duration and the type of borrower.</li>
+            <li>These funds are suited for an investment period of 1 day to 3 years.</li>
+            <li>They offer better post-tax returns than Fixed Deposits (FDs) if held for at least 3 years.</li>
+            <li>Liquid Debt Funds are a safe option for emergency funds, offering better returns than a savings account with low risk.</li>
+        </ul>
+        <button onclick="showSlide('fund-list')">Go Back</button>
+    </div>
+
+    <!-- Slide: Hybrid Fund Details -->
+    <div class="main-content slide" id="hybrid">
+        <h2 class="section-title">Hybrid Fund</h2>
+        <ul>
+            <li>Hybrid Funds invest in a mix of asset classes, typically including equity and debt.</li>
+            <li>They provide diversification through a single fund.</li>
+            <li>Ideal for goals with a 3 to 5-year investment horizon.</li>
+            <li>Multi-Asset Funds within this category offer exposure to at least three asset classes for a balanced approach.</li>
+        </ul>
+        <button onclick="showSlide('fund-list')">Go Back</button>
+    </div>
+
+    <!-- Section: Contact Us -->
+    <section id="contact">
+        <h2 class="section-title">Contact Us</h2>
+        <div class="main-content">
+            <p class="about-description">
+                If you have any questions or need assistance, feel free to reach out to us at 
+                <strong>mfd.ritesh@gmail.com</strong> or call us at <strong>+91 98407 22366</strong>.
+            </p>
+        </div>
+    </section>
+
+    <!-- Footer section -->
+    <footer>
+        <p>&copy; 2024 Mutual Minds Fintech. All Rights Reserved. <a href="#about">Privacy Policy</a> | <a href="#contact">Contact</a></p>
+    </footer>
+
+    <!-- JavaScript for handling slides -->
+    <script>
+        function showSlide(slideId) {
+            const slides = document.querySelectorAll('.slide');
+            slides.forEach(slide => slide.classList.remove('active'));
+            document.getElementById(slideId).classList.add('active');
+        }
+
+        function toggleMenu() {
+            const navLinks = document.querySelector('.nav-links');
+            const body = document.body;
+
+            navLinks.classList.toggle('open');
+            body.classList.toggle('menu-open');
+
+            if (navLinks.classList.contains('open')) {
+                body.addEventListener('click', closeMenu);
+            } else {
+                body.removeEventListener('click', closeMenu);
+            }
+        }
+
+        function closeMenu(e) {
+            if (!document.querySelector('.hamburger').contains(e.target) && !document.querySelector('.nav-links').contains(e.target)) {
+                document.querySelector('.nav-links').classList.remove('open');
+                document.body.classList.remove('menu-open');
+                document.body.removeEventListener('click', closeMenu);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
